@@ -1,12 +1,16 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <dirent.h>
-#include <stdlib.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dprovorn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/01/30 16:21:43 by dprovorn          #+#    #+#             */
+/*   Updated: 2017/01/30 16:21:48 by dprovorn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "header.h"
 int		ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 == *s2 && *s1 != '\0')
@@ -65,7 +69,68 @@ void	sort_list(char **found)
 	}
 }
 
-int main(int ac, char **av)
+void	print_usage(char c)
+{
+		printf("ls: illegal option -- %c\n",c);
+		printf("usage: ls [-GRadfglrtu]");
+		printf(" [file ...]");
+		exit(0);
+}
+
+int		check_in_base(char c, char *base)
+{
+	int i;
+
+	i = -1;
+	while(*(base + ++i))
+		if(c == *(base + i))
+		{
+			g_flags[i] = 1;
+			return(1);
+		}
+	return(0);
+}
+
+void	reset_flags()
+{
+	int i;
+
+	i = -1;
+	while(++i < 10)
+		g_flags[i] = 0;
+}
+
+void	add_elem()
+{
+
+}
+
+void	check_flags(char **av)
+{
+	int i;
+	int j;
+	static char *base = "larRtufdgG";
+
+	i = 0;
+	reset_flags();
+	while(*(av + ++i))
+	{
+		j = 0;
+		if(av[i][0] != '-')
+			break;
+		while(av[i][++j])
+			if(!check_in_base(av[i][j], base))
+				print_usage(av[i][j]);
+	}
+}
+
+int		main(int ac, char **av)
+{
+	check_flags(av);
+
+}
+
+/*int main(int ac, char **av)
 {
 	struct dirent *dirp;
 	DIR *dir;
@@ -99,4 +164,4 @@ int main(int ac, char **av)
 	i = -1;
 	while(++i < n)
 		printf("%s\n",learn[i]);
-}
+}*/
