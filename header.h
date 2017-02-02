@@ -6,7 +6,7 @@
 /*   By: dprovorn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/30 16:22:02 by dprovorn          #+#    #+#             */
-/*   Updated: 2017/01/30 16:22:04 by dprovorn         ###   ########.fr       */
+/*   Updated: 2017/02/02 15:04:40 by vcalmic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <time.h>
+# include <errno.h>
 
-int		g_flags[10];
-t_list	g_fhead;
-t_list	g_ftail;
 typedef struct	s_data
 {
 	char*	rig;
@@ -43,7 +41,21 @@ typedef struct	s_list
 	struct s_list	*prev; 	
 }				t_list;
 
+int		g_flags[10];
+t_list	*g_fhead;
+t_list	*g_fnew;
+t_list	*g_ftail;
+
 int		ft_strcmp(const char *s1, const char *s2);
 char	**my_realloc(char **str, char *new_str, int n);
 void	sort_list(char **found);
+short	is_ok(char c, char ok);
+int		get_count(char const *str, char ok);
+int		get_size(char const *str, int i, char ok);
+char	**ft_strsplit(char const *str, char ok);
+int		check_file(int *i, const char *str, char ok);
+int		match(char *s1, char *s2);
+char	*ft_strdup(const char *s);
+size_t	ft_strlen(char *str);
+char	*ft_strjoin(char const *s1, char const *s2);
 #endif
