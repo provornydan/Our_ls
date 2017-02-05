@@ -22,6 +22,7 @@
 # include <string.h>
 # include <time.h>
 # include <errno.h>
+# include "ft_printf/header.h"
 
 typedef struct	s_data
 {
@@ -45,6 +46,9 @@ int		g_flags[10];
 t_list	*g_fhead;
 t_list	*g_fnew;
 t_list	*g_ftail;
+int		g_fflag;
+t_list	*g_htemp;
+t_list	*g_ttemp;	
 
 int		ft_strcmp(const char *s1, const char *s2);
 char	**my_realloc(char **str, char *new_str, int n);

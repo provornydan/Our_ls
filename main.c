@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "header.h"
+
 int		ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 == *s2 && *s1 != '\0')
@@ -25,23 +26,23 @@ char **my_realloc(char **str, char *new_str, int n)
 {
 	char **temp;
 	int i;
-	int j;
+	size_t j;
 
 	i = -1;
 	temp = (char**)malloc(sizeof(char*) * (n+2));
 	while(++i < n)
-		temp[i] = (char*)malloc(sizeof(char)*(strlen(str[i])+1));
-	temp[i] = (char*)malloc(sizeof(char) * (strlen(new_str)+1));
+		temp[i] = (char*)malloc(sizeof(char)*(ft_strlen(str[i])+1));
+	temp[i] = (char*)malloc(sizeof(char) * (ft_strlen(new_str)+1));
 	temp[++i] = NULL;
 	i = -1;
 	while(++i < n)
 	{
 		j = -1;
-		while(++j < strlen(str[i]) + 1)
+		while(++j < ft_strlen(str[i]) + 1)
 			temp[i][j] = str[i][j];
 	}
 	j = -1;
-	while(++j < strlen(new_str) + 1)
+	while(++j < ft_strlen(new_str) + 1)
 		temp[i][j] = new_str[j];
 	return(temp);
 }
@@ -71,9 +72,9 @@ void	sort_list(char **found)
 
 void	print_usage(char c)
 {
-		printf("ls: illegal option -- %c\n",c);
-		printf("usage: ls [-GRadfglrtu]");
-		printf(" [file ...]");
+		ft_printf("ls: illegal option -- %c\n",c);
+		ft_printf("usage: ls [-GRadfglrtu]");
+		ft_printf(" [file ...]");
 		exit(0);
 }
 
@@ -91,7 +92,7 @@ int		check_in_base(char c, char *base)
 	return(0);
 }
 
-void	reset_flags()
+void	reset_flags2()
 {
 	int i;
 
@@ -100,10 +101,10 @@ void	reset_flags()
 		g_flags[i] = 0;
 }
 
-void	add_elem()
+/*void	add_elem()
 {
 
-}
+}*/
 
 void	check_flags(char **av)
 {
@@ -112,7 +113,7 @@ void	check_flags(char **av)
 	static char *base = "larRtufdgG";
 
 	i = 0;
-	reset_flags();
+	reset_flags2();
 	while(*(av + ++i))
 	{
 		j = 0;
@@ -122,16 +123,6 @@ void	check_flags(char **av)
 			if(!check_in_base(av[i][j], base))
 				print_usage(av[i][j]);
 	}
-}
-
-char	*find_name(char *str, t_list **new)
-{
-	char *here;
-	struct dirent *dirp;
-	DIR *dir;
-
-	here = ft_strdup(str);
-	return(here);
 }
 
 void	complete_info(t_data *info)
@@ -144,7 +135,7 @@ void	complete_info(t_data *info)
 	info->t = 0;
 }
 
-void	add_to_filelist(char *namef, char *root, t_list **new, t_list **tail)
+void	add_to_filelist(char *namef, t_list **new, t_list **tail)
 {
 	t_list *create;
 	t_data info;
@@ -170,7 +161,7 @@ void	add_to_filelist(char *namef, char *root, t_list **new, t_list **tail)
 	}
 }
 
-void	add_to_folderlist(char *namef, char *root)
+void	add_to_folderlist(char *namef, t_list **new, t_list **tail)
 {
 	t_list *create;
 	t_data info;
@@ -180,108 +171,81 @@ void	add_to_folderlist(char *namef, char *root)
 	create = (t_list*)malloc(sizeof(t_list));
 	create->data = info;
 	create->home = ft_strdup(".");
-	if(g_fnew == NULL)
+	if(*new == NULL)
 	{
 		create->prev = NULL;
 		create->next = NULL;
-		g_fnew = create;
-		g_ftail = create;
+		*new = create;
+		*tail = create;
 	}
 	else
 	{
-		create->prev = g_ftail;
+		create->prev = *tail;
 		create->next = NULL;
-		g_ftail->next = create;
-		g_ftail = create;
+		(*tail)->next = create;
+		*tail = create;
 	}
 }
 
-char	*find_first_name(char *first, t_list **new, t_list **tail)
+t_list *find_first_elem(t_list **new)
 {
-	struct dirent *dirp;
-	DIR *dir;
-	char *result;
+	t_list *local;
 
-	dir = opendir(".");
-	while((dirp = readdir(dir)) != NULL)
+	while((*new)->prev)
 	{
-		if(match(dirp->d_name, first)){
-			add_to_filelist(dirp->d_name, ".", new, tail);
-		}
+		*new = (*new)->prev;
 	}
-	closedir(dir);
-	if(*new == NULL)
-	{
-		if(opendir(first))
-			result = ft_strdup(first);
-		else
-			return (NULL);
-	}
-	else
-	{
-		result = ft_strdup(".");
-		result = ft_strjoin(result, "/");
-		result = ft_strjoin(result, first);
-	}
-	return(result);
+	local = *new;
+	return (local);
 }
 
-void	first_add_list(char **c)
+void	sort_helper(t_list **second)
 {
-	t_list *new;
-	t_list *tail;
-	int i;
-	char *name;
-
-	new = NULL;
-	tail = NULL;
-	i = -1;
-	name = (char*)malloc(sizeof(char)*2);
-	name[0] = '.';
-	name[1] = '\0';
-	while(c[++i])
-	{
-			name = find_first_name(c[i], &new, &tail);
-	}
-	//add_to_global(new);
+	if((*second)->next->next)
+		(*second)->next->next->prev = (*second);
+	(*second)->next->prev =(*second)->prev;
+	if((*second)->prev)	
+	(*second)->prev->next = (*second)->next;
+	(*second)->prev = (*second)->next;
+	(*second)->next = (*second)->next->next;
+	(*second)->prev->next = (*second);
+	(*second) = (*second)->prev;
 }
 
 void	sort_byname(t_list **new)
 {
 	t_list *first;
 	t_list *second;
+
 	if((*new)->next == NULL)
 		return;
 	first = *new;
-	while(first->next)
+	while(first && first->next)
 	{
-		second = *new;
-		while(second->next)
+		second = *new;//find_first_elem(new);
+		while(second && second->next)
 		{
 			if(ft_strcmp(second->data.name, second->next->data.name) > 0)
-			{
-				if(second->next->next)
-					second->next->next->prev = second;
-					second->next->prev =second->prev;
-					second->prev->next = second->next;
-					second->prev = second->next;
-					second->next = second->next->next;
-					second->prev->next = second;
-			}
+				sort_helper(&second);	
+			if(second->next)
 				second = second->next;
 		}
 		first = first->next;
 	}
+	second = find_first_elem(new);
 }
+
 void	print_files(t_list *list)
 {
 	while(list)
 	{
-		printf("%s\n",list->data.name);
+		ft_printf("%s\n",list->data.name);
+		g_fflag = 1;
 		list = list->next;
 	}
-	printf("\n");
+	ft_printf("\n");
 }
+
 void	show_files(char **av)
 {
 	int i;
@@ -294,17 +258,15 @@ void	show_files(char **av)
 	g_ftail = NULL;
 	i = 0;
 	while(av[++i])
-	{
 		if(!opendir(av[i]))
 		{
 			if(errno == ENOTDIR)
-				add_to_filelist(av[i], ".", &new, &tail);
+				add_to_filelist(av[i], &new, &tail);
 			else
-				add_to_folderlist(av[i], ".");
+				add_to_folderlist(av[i], &g_fnew, &g_ftail);
 		}
 		else
-			add_to_folderlist(av[i], ".");
-	}
+			add_to_folderlist(av[i], &g_fnew, &g_ftail);
 	if(new == NULL)
 		return ;
 	sort_byname(&new);
@@ -316,38 +278,26 @@ void	show_inside(char *str)
 {
 	struct dirent *dirp;
 	DIR *dir;
-	char **learn;
-	int n = 0;
-	int i = -1;
+	t_list *here_h;
+	t_list *here_t;
 
-	dir = opendir(str);
-	if(!dir)
+	here_h = NULL;
+	here_t = NULL;
+	if(!(dir = opendir(str)))
 	{
-		printf("error\n");
+		ft_printf("%s\n",stderr);
 		return ;
 	}
 	while((dirp = readdir(dir)) != NULL)
+		add_to_folderlist(dirp->d_name, &here_h, &here_t);
+	if(g_fflag)
+		ft_printf("%s:\n",str);
+	sort_byname(&here_h);
+	while(here_h)
 	{
-		if(n == 0)
-		{
-			learn = (char**)malloc(sizeof(char*)*2);
-			learn[0] =(char*)malloc(sizeof(strlen(dirp->d_name) + 1));
-			learn[1] = NULL;
-			while(++i < strlen(dirp->d_name)+ 1)
-				learn[0][i] = dirp->d_name[i];
-		}
-		else
-		{
-			learn = my_realloc(learn, dirp->d_name, n);
-		}
-		n++;
+		ft_printf("%s\n",here_h->data.name);
+		here_h = here_h->next;
 	}
-	sort_list(learn);
-	i = -1;
-	printf("%s:\n",str);
-	while(++i < n)
-		printf("%s\n",learn[i]);
-	printf("\n");
 }
 
 void	show_folders()
@@ -370,10 +320,16 @@ void	show_folders()
 
 int		main(int ac, char **av)
 {
+	(void)ac;
+	g_fflag = 0;
 	check_flags(av);
 	show_files(av);
-	if(g_fnew == NULL)
+	if(g_fnew == NULL && g_fflag)
 		return(0);
+	else if(g_fnew == NULL && g_fflag)
+		add_to_folderlist(".", &g_fnew, &g_ftail);
+	if(g_fnew->next != NULL)
+		g_fflag = 1;
 	show_folders();
 }
 
@@ -410,5 +366,5 @@ int		main(int ac, char **av)
 // 	sort_list(learn);
 // 	i = -1;
 // 	while(++i < n)
-// 		printf("%s\n",learn[i]);
+// 		ft_printf("%s\n",learn[i]);
 // }

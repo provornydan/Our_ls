@@ -22,7 +22,7 @@ int		check_file(int *i, const char *str, char ok)
 	return (1);
 }
 
-char		*ft_strdup(const char *s)
+/*char		*ft_strdup(const char *s)
 {
 	char	*str;
 	size_t	i;
@@ -50,7 +50,7 @@ size_t	ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
+}*/
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
