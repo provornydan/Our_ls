@@ -22,8 +22,10 @@
 # include <string.h>
 # include <time.h>
 # include <errno.h>
+# include <pwd.h>
+# include <grp.h>
 # include "ft_printf/header.h"
-
+# define IN_V struct dirent *dirp; DIR *dir; t_list *h_h; t_list *h_t; char *s;
 typedef struct	s_data
 {
 	char*	rig;
@@ -33,6 +35,7 @@ typedef struct	s_data
 	int		s;
 	time_t	t;
 	char*	name;
+	int		total;
 }				t_data;
 typedef struct	s_list
 {
@@ -47,6 +50,8 @@ t_list	*g_fhead;
 t_list	*g_fnew;
 t_list	*g_ftail;
 int		g_fflag;
+int		g_notfound;
+int		g_first;
 t_list	*g_htemp;
 t_list	*g_ttemp;	
 

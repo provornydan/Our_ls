@@ -6,7 +6,7 @@
 /*   By: dprovorn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/30 16:21:43 by dprovorn          #+#    #+#             */
-/*   Updated: 2017/01/30 16:21:48 by dprovorn         ###   ########.fr       */
+/*   Updated: 2017/02/06 16:09:38 by vcalmic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ void	sort_list(char **found)
 
 void	print_usage(char c)
 {
-		ft_printf("ls: illegal option -- %c\n",c);
-		ft_printf("usage: ls [-GRadfglrtu]");
-		ft_printf(" [file ...]");
-		exit(0);
+	ft_printf("ls: illegal option -- %c\n",c);
+	ft_printf("usage: ls [-GRadfglrtu]");
+	ft_printf(" [file ...]\n");
+	exit(0);
 }
 
 int		check_in_base(char c, char *base)
@@ -102,11 +102,11 @@ void	reset_flags2()
 }
 
 /*void	add_elem()
-{
+  {
 
-}*/
+  }*/
 
-void	check_flags(char **av)
+int		check_flags(char **av)
 {
 	int i;
 	int j;
@@ -119,20 +119,57 @@ void	check_flags(char **av)
 		j = 0;
 		if(av[i][0] != '-')
 			break;
+		if(!av[i][1])
+			break;
+		if(av[i][1] == '-' && !av[i][2])
+		{
+			i++;
+			break;
+		}
 		while(av[i][++j])
 			if(!check_in_base(av[i][j], base))
 				print_usage(av[i][j]);
 	}
+	return(i);
 }
 
-void	complete_info(t_data *info)
+char	*ft_rights(char *namef)
 {
-	info->rig = NULL;
-	info->l = 0;
-	info->o = NULL;
-	info->g = NULL;
-	info->s = 0;
-	info->t = 0;
+	char *local;
+	struct stat fileStat;
+
+	stat(namef,&fileStat);
+	local = (char*)malloc(sizeof(char)*15);
+	local[0] = (S_ISDIR(fileStat.st_mode)) ? 'd' : '-';
+    local[1] = (fileStat.st_mode & S_IRUSR) ? 'r' : '-';
+    local[2] = (fileStat.st_mode & S_IWUSR) ? 'w' : '-';
+    local[3] = (fileStat.st_mode & S_IXUSR) ? 'x' : '-';
+    local[4] = (fileStat.st_mode & S_IRGRP) ? 'r' : '-';
+    local[5] = (fileStat.st_mode & S_IWGRP) ? 'w' : '-';
+    local[6] = (fileStat.st_mode & S_IXGRP) ? 'x' : '-';
+    local[7] = (fileStat.st_mode & S_IROTH) ? 'r' : '-';
+    local[8] = (fileStat.st_mode & S_IWOTH) ? 'w' : '-';
+    local[9] = (fileStat.st_mode & S_IXOTH) ? 'x' : '-';
+    local[10] = 0;
+    return(local);
+}
+void	complete_info(t_data *info, char *namef)
+{
+	struct stat fileStat;
+	struct passwd* pass;
+	struct group* gr;
+	char	*result;
+
+	stat(namef,&fileStat);
+	info->rig = ft_rights(namef);
+	info->l = fileStat.st_nlink;
+	pass = getpwuid(fileStat.st_uid);
+	info->o = pass->pw_name;
+	gr = getgrgid(fileStat.st_gid);
+	info->g = gr->gr_name;
+	info->s = fileStat.st_size;
+	info->t = fileStat.st_mtime;
+	info->total = fileStat.st_blocks;
 }
 
 void	add_to_filelist(char *namef, t_list **new, t_list **tail)
@@ -141,7 +178,7 @@ void	add_to_filelist(char *namef, t_list **new, t_list **tail)
 	t_data info;
 
 	info.name = ft_strdup(namef);
-	complete_info(&info);
+	complete_info(&info, namef);
 	create = (t_list*)malloc(sizeof(t_list));
 	create->data = info;
 	create->home = ft_strdup(".");
@@ -167,7 +204,7 @@ void	add_to_folderlist(char *namef, t_list **new, t_list **tail)
 	t_data info;
 
 	info.name = ft_strdup(namef);
-	complete_info(&info);
+	complete_info(&info, namef);
 	create = (t_list*)malloc(sizeof(t_list));
 	create->data = info;
 	create->home = ft_strdup(".");
@@ -199,16 +236,18 @@ t_list *find_first_elem(t_list **new)
 	return (local);
 }
 
-void	sort_helper(t_list **second)
+void	sort_helper(t_list **second, t_list **new)
 {
 	if((*second)->next->next)
 		(*second)->next->next->prev = (*second);
 	(*second)->next->prev =(*second)->prev;
 	if((*second)->prev)	
-	(*second)->prev->next = (*second)->next;
+		(*second)->prev->next = (*second)->next;
 	(*second)->prev = (*second)->next;
 	(*second)->next = (*second)->next->next;
 	(*second)->prev->next = (*second);
+	if(*new == *second)
+		(*new) = (*second)->prev;
 	(*second) = (*second)->prev;
 }
 
@@ -216,34 +255,58 @@ void	sort_byname(t_list **new)
 {
 	t_list *first;
 	t_list *second;
+	int i;
 
-	if((*new)->next == NULL)
+	if(*new == NULL || (*new)->next == NULL)
 		return;
+	i = -1;
+	while(++i < 2)
+	{
 	first = *new;
 	while(first && first->next)
 	{
-		second = *new;//find_first_elem(new);
+		second = find_first_elem(new);
 		while(second && second->next)
 		{
 			if(ft_strcmp(second->data.name, second->next->data.name) > 0)
-				sort_helper(&second);	
+				sort_helper(&second, new);	
 			if(second->next)
 				second = second->next;
 		}
 		first = first->next;
 	}
 	second = find_first_elem(new);
+	}
+}
+
+void	sort_mode(t_list **new)
+{
+	if(g_flags[2] == 0 && g_flags[4] == 0)
+		sort_byname(new);
+	else if(g_flags[2] != 0 && g_flags[4] == 0)
+	;//	sort_byname_rev(new);
+	else if(g_flags[2] == 0 && g_flags[4] != 0)
+	;	//sort_bytime_mod(new);
+	else if(g_flags[2] != 0 && g_flags[4] != 0)
+	;//	sort_bytime_mod_rev(new);
 }
 
 void	print_files(t_list *list)
 {
 	while(list)
 	{
+		g_first = 1;
 		ft_printf("%s\n",list->data.name);
 		g_fflag = 1;
 		list = list->next;
 	}
-	ft_printf("\n");
+}
+
+
+int file_exist (char *filename)
+{
+  struct stat   buffer;   
+  return (stat (filename, &buffer) == 0);
 }
 
 void	show_files(char **av)
@@ -256,47 +319,100 @@ void	show_files(char **av)
 	tail = NULL;
 	g_fnew = NULL;
 	g_ftail = NULL;
-	i = 0;
+	i = -1;
 	while(av[++i])
 		if(!opendir(av[i]))
 		{
 			if(errno == ENOTDIR)
 				add_to_filelist(av[i], &new, &tail);
-			else
+			else if(file_exist(av[i]))
 				add_to_folderlist(av[i], &g_fnew, &g_ftail);
 		}
 		else
 			add_to_folderlist(av[i], &g_fnew, &g_ftail);
 	if(new == NULL)
 		return ;
-	sort_byname(&new);
-	sort_byname(&g_fnew);
+	sort_mode(&new);
+	sort_mode(&g_fnew);
 	print_files(new);
+}
+
+char	*find_path(char *str, char *source)
+{
+	char *yes;
+
+	yes = ft_strdup(str);
+	yes = ft_strjoin(yes, "/");
+	yes = ft_strjoin(yes, source);
+	return(yes);
+}
+
+char	*format_path(char *path)
+{
+	char **found;
+	char *temp;
+	int i;
+
+	i = -1;
+	found = ft_strsplit(path, '/');
+	while(found[++i])
+		;
+	temp = found[i-1];
+	g_first = 1;
+	return(temp);
+}
+
+int		check_a(char *s)
+{
+	if(s[0] == '.')
+	{
+		if(g_flags[1] == 0)
+			return(0);
+		if(g_flags[1] != 0)
+			return(1);
+	}
+	return(1);
+}
+
+void	show_blocks(t_list *here)
+{
+	int count;
+	char *s;
+	count = 0;
+	while(here)
+	{
+		s = format_path(here->data.name);
+		if(check_a(s))
+			count+=here->data.total;
+		here = here->next;
+	}
+	ft_printf("total %d\n",count);
 }
 
 void	show_inside(char *str)
 {
-	struct dirent *dirp;
-	DIR *dir;
-	t_list *here_h;
-	t_list *here_t;
-
-	here_h = NULL;
-	here_t = NULL;
+	IN_V;
+	h_h = NULL;
+	h_t = NULL;
 	if(!(dir = opendir(str)))
 	{
 		ft_printf("%s\n",stderr);
 		return ;
 	}
 	while((dirp = readdir(dir)) != NULL)
-		add_to_folderlist(dirp->d_name, &here_h, &here_t);
+		add_to_filelist(find_path(str, dirp->d_name), &h_h, &h_t);
+	if(g_first)
+		ft_printf("\n");
 	if(g_fflag)
 		ft_printf("%s:\n",str);
-	sort_byname(&here_h);
-	while(here_h)
+	show_blocks(h_h);
+	sort_mode(&h_h);
+	while(h_h)
 	{
-		ft_printf("%s\n",here_h->data.name);
-		here_h = here_h->next;
+		s = format_path(h_h->data.name);
+		if(check_a(s))
+			ft_printf("%s\n",s);
+		h_h = h_h->next;
 	}
 }
 
@@ -317,16 +433,37 @@ void	show_folders()
 		}
 	}
 }
+void	check_exist(char **av)
+{
+	int i;
+
+	i = -1;
+	while(*(av + ++i))
+	{
+		if(!file_exist(av[i]))
+		{
+			g_notfound =  1;
+			printf("ls: %s: No such file or directory\n",av[i]);
+		}
+	}
+}
 
 int		main(int ac, char **av)
 {
-	(void)ac;
+	int n;
+
 	g_fflag = 0;
-	check_flags(av);
-	show_files(av);
-	if(g_fnew == NULL && g_fflag)
+	g_notfound = 0;
+	g_first = 0;
+	if(ac > 1)
+	{
+	n = check_flags(av);
+	check_exist(av + n);
+	show_files(av + n);
+	}
+	if(g_fnew == NULL && (g_fflag || g_notfound))
 		return(0);
-	else if(g_fnew == NULL && g_fflag)
+	else if((g_fnew == NULL && !g_fflag) || ac == 1)
 		add_to_folderlist(".", &g_fnew, &g_ftail);
 	if(g_fnew->next != NULL)
 		g_fflag = 1;

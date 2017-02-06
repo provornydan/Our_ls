@@ -12,15 +12,15 @@
 
 #include "header.h"
 
-int		check_file(int *i, const char *str, char ok)
-{
-	i[0] = -1;
-	i[1] = 0;
-	if(str == NULL)
-		return (0);
-	i[3] = get_count(str, ok);
-	return (1);
-}
+// int		check_file(int *i, const char *str, char ok)
+// {
+// 	i[0] = -1;
+// 	i[1] = 0;
+// 	if(str == NULL)
+// 		return (0);
+// 	i[3] = get_count(str, ok);
+// 	return (1);
+// }
 
 /*char		*ft_strdup(const char *s)
 {
