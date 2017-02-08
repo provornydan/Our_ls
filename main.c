@@ -158,7 +158,6 @@ void	complete_info(t_data *info, char *namef)
 	struct stat fileStat;
 	struct passwd* pass;
 	struct group* gr;
-	char	*result;
 
 	stat(namef,&fileStat);
 	info->rig = ft_rights(namef);
@@ -224,58 +223,130 @@ void	add_to_folderlist(char *namef, t_list **new, t_list **tail)
 	}
 }
 
-t_list *find_first_elem(t_list **new)
+t_data	dup_info(t_data data)
 {
-	t_list *local;
+	t_data local;
 
-	while((*new)->prev)
-	{
-		*new = (*new)->prev;
-	}
-	local = *new;
-	return (local);
-}
-
-void	sort_helper(t_list **second, t_list **new)
-{
-	if((*second)->next->next)
-		(*second)->next->next->prev = (*second);
-	(*second)->next->prev =(*second)->prev;
-	if((*second)->prev)	
-		(*second)->prev->next = (*second)->next;
-	(*second)->prev = (*second)->next;
-	(*second)->next = (*second)->next->next;
-	(*second)->prev->next = (*second);
-	if(*new == *second)
-		(*new) = (*second)->prev;
-	(*second) = (*second)->prev;
+	local.name = ft_strdup(data.name);
+	local.rig = ft_strdup(data.rig);
+	local.l = data.l;
+	local.o = ft_strdup(data.o);
+	local.g = ft_strdup(data.g);
+	local.s = data.s;
+	local.t = data.t;
+	local.total = data.total;
+	return(local);
 }
 
 void	sort_byname(t_list **new)
 {
 	t_list *first;
 	t_list *second;
-	int i;
+	char *temp_home;
+	t_data temp_info;
 
-	if(*new == NULL || (*new)->next == NULL)
-		return;
-	i = -1;
-	while(++i < 2)
-	{
 	first = *new;
-	while(first && first->next)
+	while(first)
 	{
-		second = find_first_elem(new);
-		while(second && second->next)
+		second = *new;
+		while(second->next)
 		{
 			if(ft_strcmp(second->data.name, second->next->data.name) > 0)
-				sort_helper(&second, new);	
-			if(second->next)
-				second = second->next;
+			{
+				temp_home = ft_strdup(second->home);
+				temp_info = dup_info(second->data);
+				second->home = ft_strdup(second->next->home);
+				second->data = dup_info(second->next->data);
+				second->next->home = ft_strdup(temp_home);
+				second->next->data = dup_info(temp_info);
+			}
+			second = second->next;
 		}
 		first = first->next;
 	}
-	second = find_first_elem(new);
+}
+
+void	sort_byname_rev(t_list **new)
+{
+	t_list *first;
+	t_list *second;
+	char *temp_home;
+	t_data temp_info;
+
+	first = *new;
+	while(first)
+	{
+		second = *new;
+		while(second->next)
+		{
+			if(ft_strcmp(second->data.name, second->next->data.name) < 0)
+			{
+				temp_home = ft_strdup(second->home);
+				temp_info = dup_info(second->data);
+				second->home = ft_strdup(second->next->home);
+				second->data = dup_info(second->next->data);
+				second->next->home = ft_strdup(temp_home);
+				second->next->data = dup_info(temp_info);
+			}
+			second = second->next;
+		}
+		first = first->next;
+	}
+}
+
+void	sort_bytime_mod(t_list **new)
+{
+	t_list *first;
+	t_list *second;
+	char *temp_home;
+	t_data temp_info;
+
+	first = *new;
+	while(first)
+	{
+		second = *new;
+		while(second->next)
+		{
+			if((second->data.t/3600) > (second->next->data.t/3600))
+			{
+				temp_home = ft_strdup(second->home);
+				temp_info = dup_info(second->data);
+				second->home = ft_strdup(second->next->home);
+				second->data = dup_info(second->next->data);
+				second->next->home = ft_strdup(temp_home);
+				second->next->data = dup_info(temp_info);
+			}
+			second = second->next;
+		}
+		first = first->next;
+	}
+}
+
+void	sort_bytime_mod_rev(t_list **new)
+{
+	t_list *first;
+	t_list *second;
+	char *temp_home;
+	t_data temp_info;
+
+	first = *new;
+	while(first)
+	{
+		second = *new;
+		while(second->next)
+		{
+			if((long)second->data.t/60 < (long)second->data.t/60)
+			{
+				temp_home = ft_strdup(second->home);
+				temp_info = dup_info(second->data);
+				second->home = ft_strdup(second->next->home);
+				second->data = dup_info(second->next->data);
+				second->next->home = ft_strdup(temp_home);
+				second->next->data = dup_info(temp_info);
+			}
+			second = second->next;
+		}
+		first = first->next;
 	}
 }
 
@@ -284,11 +355,17 @@ void	sort_mode(t_list **new)
 	if(g_flags[2] == 0 && g_flags[4] == 0)
 		sort_byname(new);
 	else if(g_flags[2] != 0 && g_flags[4] == 0)
-	;//	sort_byname_rev(new);
+		sort_byname_rev(new);
 	else if(g_flags[2] == 0 && g_flags[4] != 0)
-	;	//sort_bytime_mod(new);
+	{
+		printf("\nHello\n");
+		sort_bytime_mod(new);
+	}
 	else if(g_flags[2] != 0 && g_flags[4] != 0)
-	;//	sort_bytime_mod_rev(new);
+	{
+		printf("\nHello\n");
+		sort_bytime_mod_rev(new);
+	}
 }
 
 void	print_files(t_list *list)
