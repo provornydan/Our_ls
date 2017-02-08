@@ -138,7 +138,7 @@ char	*ft_rights(char *namef)
 	char *local;
 	struct stat fileStat;
 
-	stat(namef,&fileStat);
+	lstat(namef,&fileStat);
 	local = (char*)malloc(sizeof(char)*15);
 	local[0] = (S_ISDIR(fileStat.st_mode)) ? 'd' : '-';
     local[1] = (fileStat.st_mode & S_IRUSR) ? 'r' : '-';
@@ -159,7 +159,7 @@ void	complete_info(t_data *info, char *namef)
 	struct passwd* pass;
 	struct group* gr;
 
-	stat(namef,&fileStat);
+	lstat(namef,&fileStat);
 	info->rig = ft_rights(namef);
 	info->l = fileStat.st_nlink;
 	pass = getpwuid(fileStat.st_uid);
@@ -377,7 +377,7 @@ void	print_files(t_list *list)
 int file_exist (char *filename)
 {
   struct stat   buffer;   
-  return (stat (filename, &buffer) == 0);
+  return (lstat (filename, &buffer) == 0);
 }
 
 void	show_files(char **av)
@@ -460,6 +460,175 @@ void	show_blocks(t_list *here)
 	ft_printf("total %d\n",count);
 }
 
+int	find_lmax(t_list *h_h)
+{
+	t_list *here;
+	int lmax;
+
+	lmax = 0;
+	here = h_h;
+	while(here)
+	{
+		if(here->data.l > lmax)
+			lmax = here->data.l;
+		here = here->next;
+	}
+	return(ft_strlen(ft_itoa(lmax)));
+}
+
+int	find_umax(t_list *h_h)
+{
+	t_list *here;
+	int u_max;
+
+	u_max = 0;
+	here = h_h;
+	while(here)
+	{
+		if(ft_strlen(here->data.o) > u_max)
+			u_max = ft_strlen(here->data.o);
+		here = here->next;
+	}
+	return(u_max);
+}
+
+int	find_gmax(t_list *h_h)
+{
+	t_list *here;
+	int u_max;
+
+	u_max = 0;
+	here = h_h;
+	while(here)
+	{
+		if(ft_strlen(here->data.g) > u_max)
+			u_max = ft_strlen(here->data.g);
+		here = here->next;
+	}
+	return(u_max);
+}
+
+int	find_smax(t_list *h_h)
+{
+	t_list *here;
+	int lmax;
+
+	lmax = 0;
+	here = h_h;
+	while(here)
+	{
+		if(here->data.s > lmax)
+			lmax = here->data.s;
+		here = here->next;
+	}
+	return(ft_strlen(ft_itoa(lmax)));
+}
+
+int	date_max(t_list *h_h)
+{
+	t_list *here;
+	int lmax;
+	char *str;
+	char **found;
+
+	lmax = 0;
+	here = h_h;
+	while(here)
+	{
+		str = ctime(&here->data.t);
+		found = ft_strsplit(str, ' ');
+		if(ft_strlen(found[2]) > lmax)
+			lmax = ft_strlen(found[2]);
+		here = here->next;
+	}
+	return(lmax);
+}
+
+void	print_insize(char *str, int n)
+{
+	int i;
+	int spaces;
+
+	i = -1;
+	spaces = n - ft_strlen(str);
+	while(++i < spaces)
+		ft_printf(" ");
+	i = -1;
+	ft_printf("%s",str);
+}
+
+void	print_insize2(char *str, int n)
+{
+	int i;
+	int spaces;
+
+	i = -1;
+	spaces = n - ft_strlen(str);
+	ft_printf(" %s",str);
+	while(++i < spaces)
+		ft_printf(" ");
+}
+
+void	print_time(time_t our_time, int date_max)
+{
+	char *str_time;
+	char **found;
+	char **t_form;
+	int i;
+	int n;
+	time_t now;
+
+	time(&now);
+	str_time = ctime(&our_time);
+	found = ft_strsplit(str_time, ' ');
+	ft_printf(" %s", found[1]);
+	n = date_max - ft_strlen(found[2]);
+	ft_printf(" ");
+	ft_printf("%2s", found[2]);
+	ft_printf(" ");
+	t_form = ft_strsplit(found[3], ':');
+	if((long)(now - our_time) > 15768000)
+	{
+		ft_printf("%5s ",found[4]);
+		return ;
+	}
+	ft_printf("%s", t_form[0]);
+	ft_printf(":");
+	ft_printf("%s ", t_form[1]);
+}
+
+void	print_as_list(t_list *h_h)
+{
+	int l_max;
+	int u_max;
+	int	g_max;
+	int	s_max;
+	int d_max;
+	char *s;
+
+	show_blocks(h_h);
+	l_max = find_lmax(h_h);
+	u_max = find_umax(h_h);
+	g_max = find_gmax(h_h);
+	s_max = find_smax(h_h);
+	d_max = date_max(h_h);
+	while(h_h)
+	{
+		s = format_path(h_h->data.name);
+		if(check_a(s))
+		{
+			ft_printf("%-12s",h_h->data.rig);
+			print_insize(ft_itoa(h_h->data.l), l_max);
+			print_insize2(h_h->data.o, u_max+1);
+			print_insize2(h_h->data.g, g_max);
+			print_insize(ft_itoa(h_h->data.s), s_max+2);
+			print_time(h_h->data.t, d_max);
+			ft_printf("%s\n",s);
+		}
+		h_h = h_h->next;
+	}
+}
+
 void	show_inside(char *str)
 {
 	IN_V;
@@ -476,8 +645,12 @@ void	show_inside(char *str)
 		ft_printf("\n");
 	if(g_fflag)
 		ft_printf("%s:\n",str);
-	show_blocks(h_h);
 	sort_mode(&h_h);
+	if(g_flags[0] == 1)
+	{
+		print_as_list(h_h);
+		return ;
+	}
 	while(h_h)
 	{
 		s = format_path(h_h->data.name);
@@ -508,17 +681,16 @@ void	show_recursively(t_list *yes)
 	while(h)
 	{
 		show_inside(h->data.name);
-		stat(h->data.name, &path_stat);
-//		if(S_ISDIR(path_stat.st_mode))
-//		{
+		g_fflag = 1;
 			dir = opendir(h->data.name);
 			while((dirp = readdir(dir)) != NULL)
 			{
-				stat(find_path(h->data.name, dirp->d_name), &path_stat);
+				lstat(find_path(h->data.name, dirp->d_name), &path_stat);
 				if(S_ISDIR(path_stat.st_mode) && !check_ispoint(dirp->d_name))
-					add_to_filelist(find_path(h->data.name, dirp->d_name), &h_h, &h_t);
+					if(check_a(dirp->d_name))
+						add_to_filelist(find_path(h->data.name, 
+							dirp->d_name), &h_h, &h_t);
 			}
-//		}
 		closedir(dir);
 		sort_mode(&h_h);
 		if(h_h != NULL)

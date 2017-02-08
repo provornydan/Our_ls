@@ -67,4 +67,5 @@ int		match(char *s1, char *s2);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int n);
 #endif

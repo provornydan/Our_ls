@@ -1,0 +1,20 @@
+total 198
+drwxr-xr-x  5 vcalmic  2016_chisinau   4096 Feb  8 19:31 .
+drwx------  8 vcalmic  2016_chisinau   4096 Feb  8 15:06 ..
+drwxr-xr-x  8 vcalmic  2016_chisinau   4096 Feb  8 19:29 .git
+drwxr-xr-x  3 vcalmic  2016_chisinau   4096 Feb  8 15:06 a
+-rwxr-xr-x  1 vcalmic  2016_chisinau  49192 Feb  8 19:26 a.out
+-rw-r--r--  1 vcalmic  2016_chisinau   1478 Feb  8 18:54 ft_itoa.c
+drwxr-xr-x  2 vcalmic  2016_chisinau   4096 Feb  8 15:06 ft_printf
+-rw-r--r--  1 vcalmic  2016_chisinau   1909 Feb  8 18:41 ft_strsplit.c
+-rw-r--r--  1 vcalmic  2016_chisinau   1838 Feb  8 15:06 func.c
+-rw-r--r--  1 vcalmic  2016_chisinau   2193 Feb  8 18:54 header.h
+-rw-r--r--  1 vcalmic  2016_chisinau   6706 Feb  8 15:06 hello
+-rw-r--r--  1 vcalmic  2016_chisinau  14242 Feb  8 19:26 main.c
+-rw-r--r--  1 vcalmic  2016_chisinau   1247 Feb  8 15:06 match.c
+-rw-r--r--  1 vcalmic  2016_chisinau      0 Feb  8 19:31 prim.txt
+
+./.git:
+total 75
+drwxr-xr-x  8 vcalmic  2016_chisinau  4096 Feb  8 19:29 .
+drwxr-xr-x  5 vcalmic  2
