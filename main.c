@@ -357,15 +357,9 @@ void	sort_mode(t_list **new)
 	else if(g_flags[2] != 0 && g_flags[4] == 0)
 		sort_byname_rev(new);
 	else if(g_flags[2] == 0 && g_flags[4] != 0)
-	{
-		printf("\nHello\n");
 		sort_bytime_mod(new);
-	}
 	else if(g_flags[2] != 0 && g_flags[4] != 0)
-	{
-		printf("\nHello\n");
 		sort_bytime_mod_rev(new);
-	}
 }
 
 void	print_files(t_list *list)
@@ -492,6 +486,47 @@ void	show_inside(char *str)
 		h_h = h_h->next;
 	}
 }
+int	check_ispoint(char *s)
+{
+	if(s[0] != '.')
+		return(0);
+	if(s[1] == '\0')
+		return(1);
+	if(s[1] == '.' && !s[2])
+		return(1);
+	return(0);
+}
+void	show_recursively(t_list *yes)
+{
+	t_list *h;
+	struct stat path_stat;
+
+	IN_V;
+	h = yes;
+	h_h = NULL;
+	h_t = NULL;
+	while(h)
+	{
+		show_inside(h->data.name);
+		stat(h->data.name, &path_stat);
+//		if(S_ISDIR(path_stat.st_mode))
+//		{
+			dir = opendir(h->data.name);
+			while((dirp = readdir(dir)) != NULL)
+			{
+				stat(find_path(h->data.name, dirp->d_name), &path_stat);
+				if(S_ISDIR(path_stat.st_mode) && !check_ispoint(dirp->d_name))
+					add_to_filelist(find_path(h->data.name, dirp->d_name), &h_h, &h_t);
+			}
+//		}
+		closedir(dir);
+		sort_mode(&h_h);
+		if(h_h != NULL)
+			show_recursively(h_h);
+		h_h = NULL;
+		h = h->next;
+	}
+}
 
 void	show_folders()
 {
@@ -500,7 +535,7 @@ void	show_folders()
 	hey = g_fnew;
 
 	if(g_flags[3])
-		;//show_recursively();
+		show_recursively(g_fnew);
 	else
 	{
 		while(hey)

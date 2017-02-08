@@ -1,0 +1,914 @@
+total 144
+a
+a.out
+ft_printf
+ft_strsplit.c
+func.c
+header.h
+hello
+main.c
+match.c
+
+total 60
+COMMIT_EDITMSG
+HEAD
+branches
+config
+description
+hooks
+index
+info
+logs
+objects
+packed-refs
+refs
+
+total 0
+
+total 33
+applypatch-msg.sample
+commit-msg.sample
+post-update.sample
+pre-applypatch.sample
+pre-commit.sample
+pre-push.sample
+pre-rebase.sample
+prepare-commit-msg.sample
+update.sample
+
+total 1
+exclude
+
+total 9
+HEAD
+refs
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 64
+4f
+6f
+90
+92
+a8
+b0
+info
+pack
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 7
+575435726078a8ebbd0e5a9f6ac63c0ba3282d
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+4d4e8077a196903fc5780a06bd38569277ebda
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+553bce7fc9bba19ff04a220d626456a07c825a
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 33
+00b76c437ea692806ecaa9c7d5e5d5caff72a0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+a66a11699835eb48d0effffc88b7e98b3f33c2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+981a6c44d7357a6d97f142b8a2db56e1ef78b2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 149
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.idx
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.pack
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 24
+heads
+remotes
+tags
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 7
+575435726078a8ebbd0e5a9f6ac63c0ba3282d
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+4d4e8077a196903fc5780a06bd38569277ebda
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+553bce7fc9bba19ff04a220d626456a07c825a
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 33
+00b76c437ea692806ecaa9c7d5e5d5caff72a0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+a66a11699835eb48d0effffc88b7e98b3f33c2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+981a6c44d7357a6d97f142b8a2db56e1ef78b2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 149
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.idx
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.pack
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+master
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 8
+origin
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 8
+b
+c
+d
+hey
+
+total 0
+
+total 33
+applypatch-msg.sample
+commit-msg.sample
+post-update.sample
+pre-applypatch.sample
+pre-commit.sample
+pre-push.sample
+pre-rebase.sample
+prepare-commit-msg.sample
+update.sample
+
+total 1
+exclude
+
+total 9
+HEAD
+refs
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 64
+4f
+6f
+90
+92
+a8
+b0
+info
+pack
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 7
+575435726078a8ebbd0e5a9f6ac63c0ba3282d
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+4d4e8077a196903fc5780a06bd38569277ebda
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+553bce7fc9bba19ff04a220d626456a07c825a
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 33
+00b76c437ea692806ecaa9c7d5e5d5caff72a0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+a66a11699835eb48d0effffc88b7e98b3f33c2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+981a6c44d7357a6d97f142b8a2db56e1ef78b2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 149
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.idx
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.pack
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 24
+heads
+remotes
+tags
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 7
+575435726078a8ebbd0e5a9f6ac63c0ba3282d
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+4d4e8077a196903fc5780a06bd38569277ebda
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+553bce7fc9bba19ff04a220d626456a07c825a
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 33
+00b76c437ea692806ecaa9c7d5e5d5caff72a0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+a66a11699835eb48d0effffc88b7e98b3f33c2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+981a6c44d7357a6d97f142b8a2db56e1ef78b2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 149
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.idx
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.pack
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+master
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 8
+origin
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 0
+yes
+
+total 16
+heads
+remotes
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 7
+575435726078a8ebbd0e5a9f6ac63c0ba3282d
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+4d4e8077a196903fc5780a06bd38569277ebda
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+553bce7fc9bba19ff04a220d626456a07c825a
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 33
+00b76c437ea692806ecaa9c7d5e5d5caff72a0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+a66a11699835eb48d0effffc88b7e98b3f33c2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+981a6c44d7357a6d97f142b8a2db56e1ef78b2
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 149
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.idx
+pack-688581f0175e118cba7adaf1c30200ea19254a4e.pack
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 1
+master
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 8
+origin
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 0
+
+total 1
+master
+
+total 8
+origin
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 2
+HEAD
+master
+
+total 231
+Makefile
+auteur
+check.c
+check_f_array.c
+check_h_1.c
+check_h_2.c
+check_l_1.c
+check_other.c
+check_zj.c
+core.c
+ft_printf.c
+func.c
+func2.c
+get_data.c
+get_length.c
+header.h
+hexa_work.c
+hexa_work2.c
+libftprintf.a
+modify.c
+modify_str.c
+number_work.c
+octa_work.c
+octa_work2.c
+print.c
+print_str.c
+print_str2.c
+wchar_work.c
+wchar_work2.c
