@@ -301,13 +301,14 @@ void	sort_bytime_mod(t_list **new)
 	char *temp_home;
 	t_data temp_info;
 
+	sort_byname_rev(new);
 	first = *new;
 	while(first)
 	{
 		second = *new;
 		while(second->next)
 		{
-			if((second->data.t/3600) > (second->next->data.t/3600))
+			if((long)(second->data.t) - (long)(second->next->data.t) < 0)
 			{
 				temp_home = ft_strdup(second->home);
 				temp_info = dup_info(second->data);
@@ -329,13 +330,14 @@ void	sort_bytime_mod_rev(t_list **new)
 	char *temp_home;
 	t_data temp_info;
 
+	sort_byname(new);
 	first = *new;
 	while(first)
 	{
 		second = *new;
 		while(second->next)
 		{
-			if((long)second->data.t/60 < (long)second->data.t/60)
+			if((long)(second->data.t) - (long)(second->next->data.t) > 0)
 			{
 				temp_home = ft_strdup(second->home);
 				temp_info = dup_info(second->data);
@@ -362,51 +364,7 @@ void	sort_mode(t_list **new)
 		sort_bytime_mod_rev(new);
 }
 
-void	print_files(t_list *list)
-{
-	while(list)
-	{
-		g_first = 1;
-		ft_printf("%s\n",list->data.name);
-		g_fflag = 1;
-		list = list->next;
-	}
-}
 
-
-int file_exist (char *filename)
-{
-  struct stat   buffer;   
-  return (lstat (filename, &buffer) == 0);
-}
-
-void	show_files(char **av)
-{
-	int i;
-	t_list *new;
-	t_list *tail;
-
-	new = NULL;
-	tail = NULL;
-	g_fnew = NULL;
-	g_ftail = NULL;
-	i = -1;
-	while(av[++i])
-		if(!opendir(av[i]))
-		{
-			if(errno == ENOTDIR)
-				add_to_filelist(av[i], &new, &tail);
-			else if(file_exist(av[i]))
-				add_to_folderlist(av[i], &g_fnew, &g_ftail);
-		}
-		else
-			add_to_folderlist(av[i], &g_fnew, &g_ftail);
-	if(new == NULL)
-		return ;
-	sort_mode(&new);
-	sort_mode(&g_fnew);
-	print_files(new);
-}
 
 char	*find_path(char *str, char *source)
 {
@@ -699,6 +657,11 @@ void	show_recursively(t_list *yes)
 		h = h->next;
 	}
 }
+int 	file_exist (char *filename)
+{
+  struct stat   buffer;   
+  return (lstat (filename, &buffer) == 0);
+}
 
 void	show_folders()
 {
@@ -730,6 +693,54 @@ void	check_exist(char **av)
 			printf("ls: %s: No such file or directory\n",av[i]);
 		}
 	}
+}
+
+void	print_files(t_list *list)
+{
+	while(list)
+	{
+		g_first = 1;
+		g_fflag = 1;
+		if(g_flags[0])
+			break;
+		if(check_a(list->data.name))
+		{
+			ft_printf("%s\n",list->data.name);
+		}
+		list = list->next;
+	}
+	if(g_flags[0])
+		print_as_list(list);
+}
+
+
+
+void	show_files(char **av)
+{
+	int i;
+	t_list *new;
+	t_list *tail;
+
+	new = NULL;
+	tail = NULL;
+	g_fnew = NULL;
+	g_ftail = NULL;
+	i = -1;
+	while(av[++i])
+		if(!opendir(av[i]))
+		{
+			if(errno == ENOTDIR)
+				add_to_filelist(av[i], &new, &tail);
+			else if(file_exist(av[i]))
+				add_to_folderlist(av[i], &g_fnew, &g_ftail);
+		}
+		else
+			add_to_folderlist(av[i], &g_fnew, &g_ftail);
+	if(new == NULL)
+		return ;
+	sort_mode(&new);
+	sort_mode(&g_fnew);
+	print_files(new);
 }
 
 int		main(int ac, char **av)
