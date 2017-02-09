@@ -24,6 +24,12 @@
 # include <errno.h>
 # include <pwd.h>
 # include <grp.h>
+
+#include <sys/types.h>
+#include <sys/xattr.h>
+#include <sys/types.h>
+#include <sys/acl.h>
+
 # include "ft_printf/header.h"
 # define IN_V struct dirent *dirp; DIR *dir; t_list *h_h; t_list *h_t; char *s;
 typedef struct	s_data

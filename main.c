@@ -133,6 +133,33 @@ int		check_flags(char **av)
 	return(i);
 }
 
+char   ft_ext_att(char *namef)
+ {
+    acl_t acl = NULL;
+    acl_entry_t dummy;
+    ssize_t xattr;
+    char str[10];
+
+    xattr = 0;
+    acl = acl_get_link_np(namef, ACL_TYPE_EXTENDED);
+    if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1)
+    {
+        acl_free(acl);
+        acl = NULL;
+    }
+    xattr = listxattr(namef, NULL, 0, XATTR_NOFOLLOW);
+    if (xattr < 0)
+        xattr = 0;
+    str[1] = '\0';
+    if (xattr > 0)
+        str[0] = '@';
+    else if (acl != NULL)
+        str[0] = '+';
+    else
+        str[0] = 0;
+    return (str[0]);
+ }
+
 char	*ft_rights(char *namef)
 {
 	char *local;
@@ -152,7 +179,9 @@ char	*ft_rights(char *namef)
 	local[7] = (fileStat.st_mode & S_IROTH) ? 'r' : '-';
 	local[8] = (fileStat.st_mode & S_IWOTH) ? 'w' : '-';
 	local[9] = (fileStat.st_mode & S_IXOTH) ? 'x' : '-';
-	local[10] = 0;
+	local[10] = ft_ext_att(namef);
+	if (local[10 != 0])
+		local[11] = 0;
     return(local);
 }
 
