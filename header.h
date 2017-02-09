@@ -54,6 +54,7 @@ int		g_notfound;
 int		g_first;
 t_list	*g_htemp;
 t_list	*g_ttemp;	
+int		g_file;
 
 int		ft_strcmp(const char *s1, const char *s2);
 char	**my_realloc(char **str, char *new_str, int n);

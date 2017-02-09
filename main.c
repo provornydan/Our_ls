@@ -6,7 +6,7 @@
 /*   By: dprovorn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/30 16:21:43 by dprovorn          #+#    #+#             */
-/*   Updated: 2017/02/06 16:09:38 by vcalmic          ###   ########.fr       */
+/*   Updated: 2017/02/09 16:09:25 by dprovorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,7 +581,10 @@ void	print_as_list(t_list *h_h)
 			print_insize2(h_h->data.g, g_max);
 			print_insize(ft_itoa(h_h->data.s), s_max+2);
 			print_time(h_h->data.t, d_max);
-			ft_printf("%s\n",s);
+			if(g_file)
+				ft_printf("%s\n",h_h->data.name);
+			else
+				ft_printf("%s\n",s);
 		}
 		h_h = h_h->next;
 	}
@@ -709,6 +712,7 @@ void	print_files(t_list *list)
 		}
 		list = list->next;
 	}
+	g_file = 1;
 	if(g_flags[0])
 		print_as_list(list);
 }
@@ -750,6 +754,7 @@ int		main(int ac, char **av)
 	g_fflag = 0;
 	g_notfound = 0;
 	g_first = 0;
+	g_file = 0;
 	if(ac > 1)
 	{
 	n = check_flags(av);
@@ -762,6 +767,7 @@ int		main(int ac, char **av)
 		add_to_folderlist(".", &g_fnew, &g_ftail);
 	if(g_fnew->next != NULL)
 		g_fflag = 1;
+	g_file = 0;
 	show_folders();
 }
 
