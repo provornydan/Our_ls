@@ -140,19 +140,22 @@ char	*ft_rights(char *namef)
 
 	lstat(namef,&fileStat);
 	local = (char*)malloc(sizeof(char)*15);
-	local[0] = (S_ISDIR(fileStat.st_mode)) ? 'd' : '-';
+	local[0] = (S_ISLNK(fileStat.st_mode)) ? 'l' : '-';
+	if (local[0] != 'l')
+		local[0] = (S_ISDIR(fileStat.st_mode)) ? 'd' : '-';
     local[1] = (fileStat.st_mode & S_IRUSR) ? 'r' : '-';
-    local[2] = (fileStat.st_mode & S_IWUSR) ? 'w' : '-';
-    local[3] = (fileStat.st_mode & S_IXUSR) ? 'x' : '-';
-    local[4] = (fileStat.st_mode & S_IRGRP) ? 'r' : '-';
-    local[5] = (fileStat.st_mode & S_IWGRP) ? 'w' : '-';
-    local[6] = (fileStat.st_mode & S_IXGRP) ? 'x' : '-';
-    local[7] = (fileStat.st_mode & S_IROTH) ? 'r' : '-';
-    local[8] = (fileStat.st_mode & S_IWOTH) ? 'w' : '-';
-    local[9] = (fileStat.st_mode & S_IXOTH) ? 'x' : '-';
-    local[10] = 0;
+	local[2] = (fileStat.st_mode & S_IWUSR) ? 'w' : '-';
+	local[3] = (fileStat.st_mode & S_IXUSR) ? 'x' : '-';
+	local[4] = (fileStat.st_mode & S_IRGRP) ? 'r' : '-';
+	local[5] = (fileStat.st_mode & S_IWGRP) ? 'w' : '-';
+	local[6] = (fileStat.st_mode & S_IXGRP) ? 'x' : '-';
+	local[7] = (fileStat.st_mode & S_IROTH) ? 'r' : '-';
+	local[8] = (fileStat.st_mode & S_IWOTH) ? 'w' : '-';
+	local[9] = (fileStat.st_mode & S_IXOTH) ? 'x' : '-';
+	local[10] = 0;
     return(local);
 }
+
 void	complete_info(t_data *info, char *namef)
 {
 	struct stat fileStat;
@@ -427,8 +430,9 @@ int	find_lmax(t_list *h_h)
 	here = h_h;
 	while(here)
 	{
-		if(here->data.l > lmax)
-			lmax = here->data.l;
+		if(check_a(format_path(here->data.name)))
+			if(here->data.l > lmax)
+				lmax = here->data.l;
 		here = here->next;
 	}
 	return(ft_strlen(ft_itoa(lmax)));
@@ -443,7 +447,8 @@ int	find_umax(t_list *h_h)
 	here = h_h;
 	while(here)
 	{
-		if(ft_strlen(here->data.o) > u_max)
+		if(check_a(format_path(here->data.name)))
+			if(ft_strlen(here->data.o) > u_max)
 			u_max = ft_strlen(here->data.o);
 		here = here->next;
 	}
@@ -459,8 +464,9 @@ int	find_gmax(t_list *h_h)
 	here = h_h;
 	while(here)
 	{
-		if(ft_strlen(here->data.g) > u_max)
-			u_max = ft_strlen(here->data.g);
+		if(check_a(format_path(here->data.name)))
+			if(ft_strlen(here->data.g) > u_max)
+				u_max = ft_strlen(here->data.g);
 		here = here->next;
 	}
 	return(u_max);
@@ -475,8 +481,9 @@ int	find_smax(t_list *h_h)
 	here = h_h;
 	while(here)
 	{
-		if(here->data.s > lmax)
-			lmax = here->data.s;
+		if(check_a(format_path(here->data.name)))
+			if(here->data.s > lmax)
+				lmax = here->data.s;
 		here = here->next;
 	}
 	return(ft_strlen(ft_itoa(lmax)));
@@ -495,8 +502,9 @@ int	date_max(t_list *h_h)
 	{
 		str = ctime(&here->data.t);
 		found = ft_strsplit(str, ' ');
-		if(ft_strlen(found[2]) > lmax)
-			lmax = ft_strlen(found[2]);
+		if(check_a(format_path(here->data.name)))
+			if(ft_strlen(found[2]) > lmax)
+				lmax = ft_strlen(found[2]);
 		here = here->next;
 	}
 	return(lmax);
@@ -555,6 +563,30 @@ void	print_time(time_t our_time, int date_max)
 	ft_printf("%s ", t_form[1]);
 }
 
+char *ft_rdlnk(t_list *h_h)
+{
+	struct stat sb;
+	char *linkname;
+	ssize_t r;
+
+	lstat(h_h->data.name, &sb);
+	linkname = (char *)malloc(sizeof(char) * 1024);
+	r = readlink(h_h->data.name, linkname, 1024);
+	linkname[r] = '\0';
+	return (linkname);
+}
+
+char *ft_readlink_file(t_list *h_h, char *s)
+{
+	char *work;
+	char *temp;
+
+	temp = ft_strjoin(s, " -> ");
+	work = ft_strjoin(temp, ft_rdlnk(h_h));
+	free(temp);
+	return (work);
+}
+
 void	print_as_list(t_list *h_h)
 {
 	int l_max;
@@ -563,6 +595,7 @@ void	print_as_list(t_list *h_h)
 	int	s_max;
 	int d_max;
 	char *s;
+	char *b;
 
 	show_blocks(h_h);
 	l_max = find_lmax(h_h);
@@ -583,6 +616,11 @@ void	print_as_list(t_list *h_h)
 			print_time(h_h->data.t, d_max);
 			if(g_file)
 				ft_printf("%s\n",h_h->data.name);
+			else if (h_h->data.rig[0] == 'l')
+			{
+				b = ft_readlink_file(h_h, s);
+				ft_printf("%s\n", b);
+			}
 			else
 				ft_printf("%s\n",s);
 		}
