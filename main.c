@@ -179,6 +179,10 @@ char	*ft_rights(char *namef)
 	local[7] = (fileStat.st_mode & S_IROTH) ? 'r' : '-';
 	local[8] = (fileStat.st_mode & S_IWOTH) ? 'w' : '-';
 	local[9] = (fileStat.st_mode & S_IXOTH) ? 'x' : '-';
+	if (local[0] == '-')
+		local[0] = (S_ISCHR(fileStat.st_mode)) ? 'c' : '-';
+	if (local[0] == '-')
+		local[0] = (S_ISBLK(fileStat.st_mode)) ? 'b' : '-';
 	local[10] = ft_ext_att(namef);
 	if (local[10 != 0])
 		local[11] = 0;
